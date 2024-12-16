@@ -5,6 +5,40 @@ document.addEventListener("DOMContentLoaded", () => {
     const sendButton = document.getElementById("send-btn");
     const chatInput = document.getElementById("chat-input");
     const chatMessages = document.getElementById("chat-messages");
+    const chatTitle = document.getElementById("chat-title");
+
+    // WebSocket setup
+    const socket = new WebSocket("ws://localhost:8080"); // Adjust URL as needed
+
+    socket.addEventListener("open", () => {
+        console.log("Connected to WebSocket server");
+        // Notify server of user's presence (optional)
+        const initMessage = JSON.stringify({ type: "status", content: "User connected" });
+        socket.send(initMessage);
+    });
+
+    socket.addEventListener("message", (event) => {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "message") {
+            // Display incoming message
+            const messageElement = document.createElement("div");
+            messageElement.classList.add("message", "received");
+            messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.content}`;
+            chatMessages.appendChild(messageElement);
+
+            // Scroll to the latest message
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+
+    socket.addEventListener("close", () => {
+        console.log("WebSocket connection closed");
+    });
+
+    socket.addEventListener("error", (error) => {
+        console.error("WebSocket error:", error);
+    });
 
     // Fetch and display the user's live IP address
     async function fetchIPAddress() {
@@ -24,6 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     logoutButton.addEventListener("click", () => {
         alert("Logging out...");
         // Placeholder for actual logout logic (e.g., API call)
+        socket.close();
         window.location.href = "/login.html"; // Redirect to login page
     });
 
@@ -36,7 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // Add the message to the chat area
+        // Send the message to the WebSocket server
+        const messageData = {
+            type: "message",
+            username: "You", // Replace with dynamic username if available
+            content: messageText,
+        };
+        socket.send(JSON.stringify(messageData));
+
+        // Display the sent message in the chat area
         const messageElement = document.createElement("div");
         messageElement.classList.add("message", "sent");
         messageElement.innerHTML = `<strong>You:</strong> ${messageText}`;
@@ -47,22 +90,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Clear the input field
         chatInput.value = "";
-
-        // Simulate receiving a reply (for testing)
-        setTimeout(() => {
-            const replyElement = document.createElement("div");
-            replyElement.classList.add("message", "received");
-            replyElement.innerHTML = `<strong>John:</strong> Got your message!`;
-            chatMessages.appendChild(replyElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }, 1000);
     });
 
-    // Optional: Handle "Enter" key press to send messages
+    // Handle "Enter" key press to send messages
     chatInput.addEventListener("keypress", (event) => {
         if (event.key === "Enter") {
             event.preventDefault();
             sendButton.click();
         }
+    });
+
+    // Dynamic Chat Header Update
+    document.querySelectorAll("#user-list li").forEach((user) => {
+        user.addEventListener("click", () => {
+            const username = user.textContent.trim();
+            chatTitle.textContent = `Chat with ${username}`;
+        });
     });
 });
