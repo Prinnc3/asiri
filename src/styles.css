@@ -1,0 +1,114 @@
+/* Reset browser defaults */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Body styles */
+body {
+    background-color: #2d2d2d; /* Dark grey */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Container styles */
+.login-container {
+    background-color: #3d3d3d;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    width: 400px;
+    text-align: center;
+    color: #fff;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 300px;
+}
+
+/* Input group styles */
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px 40px 10px 35px; /* Space for icons */
+    border: 1px solid #555;
+    border-radius: 5px;
+    background-color: #555;
+    color: #fff;
+}
+
+
+
+.input-group input::placeholder {
+    color: #aaa;
+}
+
+/* Icons inside input fields */
+.input-group .icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+    font-size: 14px;
+}
+
+#toggle-password {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+    cursor: pointer;
+}
+
+/* Button group styles */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+}
+
+.login-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: #ccc;
+    color: black;
+}
+
+/* Error message */
+#error-message {
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.hidden {
+    display: none;
+}
